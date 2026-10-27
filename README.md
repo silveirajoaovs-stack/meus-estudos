@@ -12,7 +12,7 @@ Feito com React + Vite + TypeScript, com dados e login no Supabase.
 
 ## Telas
 
-- [x] Login (e-mail e senha)
+- [x] Login (e-mail e senha, sem cadastro público — o usuário é criado no painel do Supabase)
 - [x] Painel
 - [x] Matérias
 - [ ] Resumos
