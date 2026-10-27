@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
 import { useStudyData } from './lib/useStudyData'
+import { useTheme, type ThemeChoice } from './lib/useTheme'
 import type { Tab } from './lib/types'
 import { Login } from './components/Login'
+import { ThemeButton } from './components/ThemeButton'
 import { Painel } from './pages/Painel'
 import { Materias } from './pages/Materias'
 
@@ -18,6 +20,7 @@ const TABS: [Tab, string][] = [
 export default function App() {
   // undefined = ainda verificando se já existe login salvo
   const [session, setSession] = useState<Session | null | undefined>(undefined)
+  const theme = useTheme()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
@@ -27,10 +30,12 @@ export default function App() {
 
   if (session === undefined) return <div className="center-screen muted">Carregando…</div>
   if (!session) return <Login />
-  return <Shell email={session.user.email ?? ''} />
+  return <Shell email={session.user.email ?? ''} theme={theme.choice} onCycleTheme={theme.cycle} />
 }
 
-function Shell({ email }: { email: string }) {
+type ShellProps = { email: string; theme: ThemeChoice; onCycleTheme: () => void }
+
+function Shell({ email, theme, onCycleTheme }: ShellProps) {
   const [tab, setTab] = useState<Tab>('painel')
   const data = useStudyData()
 
@@ -42,13 +47,16 @@ function Shell({ email }: { email: string }) {
             <span className="eyebrow">Análise e Desenvolvimento de Sistemas</span>
             <h1 className="title">Meus estudos</h1>
           </div>
-          <nav aria-label="Seções" className="segmented">
-            {TABS.map(([id, label]) => (
-              <button key={id} type="button" className="segment" aria-current={tab === id ? 'page' : undefined} onClick={() => setTab(id)}>
-                {label}
-              </button>
-            ))}
-          </nav>
+          <div className="header-actions">
+            <nav aria-label="Seções" className="segmented">
+              {TABS.map(([id, label]) => (
+                <button key={id} type="button" className="segment" aria-current={tab === id ? 'page' : undefined} onClick={() => setTab(id)}>
+                  {label}
+                </button>
+              ))}
+            </nav>
+            <ThemeButton choice={theme} onClick={onCycleTheme} />
+          </div>
           <div className="account">
             <span className="muted small" title={email}>
               {email}

@@ -72,7 +72,7 @@ export function Painel({ data, goTo }: Props) {
                   title={fmt(d.minutes)}
                   style={{
                     height: d.minutes ? Math.max(6, Math.round((d.minutes / maxDay) * 90)) : 4,
-                    background: d.minutes ? (d.isToday ? 'var(--accent)' : '#9FB3F8') : 'var(--track)',
+                    background: d.minutes ? (d.isToday ? 'var(--accent)' : 'var(--heat-2)') : 'var(--track)',
                   }}
                 />
                 <span className="bar-label">{d.label}</span>
